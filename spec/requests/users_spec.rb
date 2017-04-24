@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'UsersAPI', type: :request do
-        # Initialize test data:
+        # Initialize test data
         let!(:users) { create_list(:user, 10) }
         let(:user_id) { users.first.id }
 
@@ -9,24 +9,13 @@ RSpec.describe 'UsersAPI', type: :request do
         before  { get '/users' }
         
         context 'when users exist' do
-            it 'returns users' do
+            it 'returns all users' do
                 expect(json).not_to be_empty
                 expect(json.size).to eq(10)
             end
 
             it 'returns status code 200' do
                 expect(response).to have_http_status(200)
-            end
-        end
-
-        context 'when users do not exist' do
-            # TODO destroy the list of users here
-            it 'returns a not found error message' do
-                expect(response.body).to match(/Users not found. Create a new user/)
-            end
-
-            it 'returns status code 404' do
-                expect(response).to have_http_status(404)
             end
         end
     end
@@ -87,7 +76,7 @@ RSpec.describe 'UsersAPI', type: :request do
                 expect(response).to have_http_status(500)
             end
         end
-        # TODO: fix strange error here:
+        # TODO: fix strange error caused by line 84:
         context 'when the username is invalid' do
             before { post '/users', params: invalid_username }
 
