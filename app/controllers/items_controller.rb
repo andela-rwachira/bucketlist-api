@@ -33,7 +33,7 @@ class ItemsController < ApplicationController
     private
 
     def item_params
-        params.permit(:bucket_id, :name)
+        params.permit(:bucket_id, :name, :done)
     end
 
     def set_item

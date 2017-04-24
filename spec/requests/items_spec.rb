@@ -23,7 +23,7 @@ RSpec.describe 'Items API', type: :request do
     end
 
     describe 'POST /users/:user_id/buckets/:bucket_id/items' do
-        let(:valid_attributes) { { name: 'Things' } }
+        let(:valid_attributes) { { name: 'Things', done: false } }
         let(:invalid_attributes) { { name: '' } }
 
         context 'when the request is valid' do
@@ -75,13 +75,28 @@ RSpec.describe 'Items API', type: :request do
 
     describe 'PUT /users/:user_id/buckets/:bucket_id/items/:id' do
         let(:valid_attributes) { { name: 'Updated' } }
+        let(:one_attribute) { { done: true } }
         let(:invalid_attributes) { { name: '' } }
 
         context 'when a request is valid' do
             before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: valid_attributes }
 
             it 'returns updated item' do
-                expect(response.body).to be_empty
+                updated_item = Item.find(id)
+                expect(updated_item.name).to match(/Updated/)
+            end
+
+            it 'returns status code 204' do
+                expect(response).to have_http_status(204)
+            end
+        end
+
+        context 'when an update request has only one attribute' do
+            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: one_attribute }
+
+            it 'returns updated item' do
+                updated_item = Item.find(id)
+                expect(updated_item.done).to match(/true/)
             end
 
             it 'returns status code 204' do
@@ -94,6 +109,19 @@ RSpec.describe 'Items API', type: :request do
 
             it 'returns status code 204' do
                 expect(response).to have_http_status(204)
+            end
+        end
+
+        context 'when item does not exist' do
+            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: valid_attributes }
+            let(:id) {100}
+
+            it 'returns an item not found error message' do
+                expect(response.body).to match(/Couldn't find Item/)
+            end
+
+            it 'returns status code 404' do
+                expect(response).to have_http_status(404)
             end
         end
     end
