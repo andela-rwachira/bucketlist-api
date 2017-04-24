@@ -27,7 +27,7 @@ RSpec.describe 'BucketAPI', type: :request do
         context 'when the request is valid' do
             before { post "/users/#{user_id}/buckets", params: valid_attributes }
 
-            it 'returns the bucket' do
+            it 'creates the bucket' do
                 expect(json['name']).to eq('Travel')
             end
 
@@ -71,8 +71,33 @@ RSpec.describe 'BucketAPI', type: :request do
         end
     end
 
+    describe 'PUT /users/:user_id/buckets/:id' do
+        let(:valid_attributes) { { name: 'Updated' } }
+        let(:invalid_attributes) { { name: ''} }
+
+        context 'when request is valid' do
+            before { put "/users/#{user_id}/buckets/#{id}", params: valid_attributes }
+
+            it 'returns updated bucket' do
+                expect(response.body).to be_empty
+            end
+
+            it 'returns status code 204' do
+            expect(response).to have_http_status(204)
+            end
+        end
+
+        context 'when when request is not valid' do
+            before { put "/users/#{user_id}/buckets/#{id}", params: invalid_attributes }
+
+            it 'returns status code 204' do
+                expect(response).to have_http_status(204)
+            end
+        end
+    end
+
     describe 'DELETE /users/:user_id/buckets/:id' do
-        before { delete "/users/#{user_id}/buckets/#{id}"}
+        before { delete "/users/#{user_id}/buckets/#{id}" }
 
         context 'when bucket exists' do
             it 'returns status code 204' do
