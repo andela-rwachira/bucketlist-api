@@ -43,8 +43,8 @@ RSpec.describe 'BucketAPI', type: :request do
                 expect(response.body).to match(/Validation failed: Name can't be blank/)
             end
 
-            it 'returns status code 500' do
-                expect(response).to have_http_status(500)
+            it 'returns status code 422' do
+                expect(response).to have_http_status(422)
             end
         end
     end
