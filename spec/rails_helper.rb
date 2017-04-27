@@ -38,8 +38,8 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
-  config.include RequestSpecHelper, type: :request
-  
+  config.include RequestSpecHelper
+  config.include ControllerSpecHelper
   config.include FactoryGirl::Syntax::Methods
 
   config.before(:suite) do
