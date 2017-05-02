@@ -18,6 +18,13 @@ module ControllerSpecHelper
         }
     end
 
+    def valid_user_headers
+        {
+            "Authorization" => token_generator(users.first.id),
+            "Content-Type" => "application/json"
+        }
+    end
+
     # return invalid headers
     def invalid_headers
         {

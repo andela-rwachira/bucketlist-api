@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+    skip_before_action :authorize_request, only: :create
     before_action :set_user, only: [:show, :destroy]
     
     # GET /users
@@ -9,8 +10,10 @@ class UsersController < ApplicationController
 
     # POST /users
     def create
-        @user = User.create!(user_params)
-        json_response(@user, :created)
+        user = User.create!(user_params)
+        auth_token = AuthenticateUser.new(user.username, user.password).call
+        response = { message: Message.account_created, auth_token: auth_token, user_id: user.id }
+        json_response(response, :created)
     end
 
     # GET /users/:id
