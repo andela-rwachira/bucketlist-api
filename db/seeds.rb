@@ -5,3 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+# seed 50 records
+50.times do
+    user = User.create(username: Faker::Lorem.word, password: Faker::Lorem.word)
+    bucket = Bucket.create(name: Faker::Lorem.word, user_id: User.first.id)
+    bucket.items.create(name: Faker::Lorem.word, done: false)
+end

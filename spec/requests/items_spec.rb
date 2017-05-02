@@ -98,7 +98,7 @@ RSpec.describe 'Items API', type: :request do
 
             it 'returns updated item' do
                 updated_item = Item.find(id)
-                expect(updated_item.done).to match(/true/)
+                expect(updated_item.done).to match(/t/)
             end
 
             it 'returns status code 204' do
