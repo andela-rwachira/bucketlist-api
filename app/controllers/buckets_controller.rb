@@ -3,13 +3,14 @@ class BucketsController < ApplicationController
     
     # GET /users/user_id/buckets
     def index
-        @buckets = Bucket.all
+        # get current user todos
+        @buckets = current_user.buckets
         json_response(@buckets)
     end
 
     #  POST /users/user_id/buckets
     def create
-        @bucket = Bucket.create!(bucket_params)
+        @bucket = current_user.buckets.create!(bucket_params)
         json_response(@bucket, :created)
     end
 
@@ -33,10 +34,10 @@ class BucketsController < ApplicationController
     private
 
     def bucket_params
-        params.permit(:user_id, :name)
+        params.permit(:name)
     end
 
     def set_bucket
-        @bucket = Bucket.find(params[:id])
+        @bucket = current_user.buckets.find(params[:id])
     end
 end

@@ -8,9 +8,11 @@ RSpec.describe 'Items API', type: :request do
     let(:bucket_id) { bucket.id}
     let!(:items) { create_list(:item, 10, bucket_id: bucket.id)}
     let(:id) { items.first.id }
+     # authorize request
+    let(:headers) { valid_headers }
 
     describe 'GET /users/:user_id/buckets/:bucket_id/items' do
-        before { get "/users/#{user_id}/buckets/#{bucket_id}/items" }
+        before { get "/users/#{user_id}/buckets/#{bucket_id}/items", params: {}, headers: headers }
 
         it 'returns all items' do
             expect(json).not_to be_empty
@@ -23,11 +25,11 @@ RSpec.describe 'Items API', type: :request do
     end
 
     describe 'POST /users/:user_id/buckets/:bucket_id/items' do
-        let(:valid_attributes) { { name: 'Things', done: false } }
-        let(:invalid_attributes) { { name: '' } }
+        let(:valid_attributes) { { name: 'Things', done: false }.to_json }
+        let(:invalid_attributes) { { name: '' }.to_json }
 
         context 'when the request is valid' do
-            before { post "/users/#{user_id}/buckets/#{bucket_id}/items", params: valid_attributes }
+            before { post "/users/#{user_id}/buckets/#{bucket_id}/items", params: valid_attributes, headers: headers }
 
             it 'creates the item' do
                 expect(json['name']).to eq('Things')
@@ -39,7 +41,7 @@ RSpec.describe 'Items API', type: :request do
         end
 
         context 'when the request is invalid' do
-            before { post "/users/#{user_id}/buckets/#{bucket_id}/items", params: invalid_attributes }
+            before { post "/users/#{user_id}/buckets/#{bucket_id}/items", params: invalid_attributes, headers: headers }
 
             it 'returns name validation error' do
                 expect(response.body).to match(/Validation failed: Name can't be blank/)
@@ -52,7 +54,7 @@ RSpec.describe 'Items API', type: :request do
     end
 
     describe 'GET /users/:user_id/buckets/:bucket_id/items/:id' do
-        before { get "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}" }
+        before { get "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: {}, headers: headers }
 
         context 'when item exists' do
             it 'returns the item' do
@@ -74,12 +76,12 @@ RSpec.describe 'Items API', type: :request do
     end
 
     describe 'PUT /users/:user_id/buckets/:bucket_id/items/:id' do
-        let(:valid_attributes) { { name: 'Updated' } }
-        let(:one_attribute) { { done: true } }
-        let(:invalid_attributes) { { name: '' } }
+        let(:valid_attributes) { { name: 'Updated' }.to_json }
+        let(:one_attribute) { { done: true }.to_json }
+        let(:invalid_attributes) { { name: '' }.to_json }
 
         context 'when a request is valid' do
-            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: valid_attributes }
+            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: valid_attributes, headers: headers }
 
             it 'returns updated item' do
                 updated_item = Item.find(id)
@@ -92,7 +94,7 @@ RSpec.describe 'Items API', type: :request do
         end
 
         context 'when an update request has only one attribute' do
-            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: one_attribute }
+            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: one_attribute, headers: headers }
 
             it 'returns updated item' do
                 updated_item = Item.find(id)
@@ -105,7 +107,7 @@ RSpec.describe 'Items API', type: :request do
         end
 
         context 'when a request is not valid' do
-            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: invalid_attributes }
+            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: invalid_attributes, headers: headers }
 
             it 'returns status code 204' do
                 expect(response).to have_http_status(204)
@@ -113,7 +115,7 @@ RSpec.describe 'Items API', type: :request do
         end
 
         context 'when item does not exist' do
-            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: valid_attributes }
+            before { put "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: valid_attributes, headers: headers }
             let(:id) {100}
 
             it 'returns an item not found error message' do
@@ -127,7 +129,7 @@ RSpec.describe 'Items API', type: :request do
     end
 
     describe 'DELETE /users/:user_id/buckets/:bucket_id/items/:id' do
-        before { delete "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}" }
+        before { delete "/users/#{user_id}/buckets/#{bucket_id}/items/#{id}", params: {}, headers: headers }
         
         context 'when item exists' do
             it 'returns status code 204' do
