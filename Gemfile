@@ -26,7 +26,6 @@ gem 'puma', '~> 3.0'
 group :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails', '~> 4.0'
-  gem 'faker'
   gem 'shoulda-matchers', '~> 3.1'
 end
 
@@ -38,6 +37,8 @@ group :development, :test do
   gem 'bcrypt', '~> 3.1.7'
   gem 'jwt'
   gem 'active_model_serializers', '~> 0.10.0'
+  gem 'will_paginate', '~> 3.1.0'
+  gem 'faker'
 end
 
 group :development do

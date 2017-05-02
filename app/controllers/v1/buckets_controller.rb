@@ -4,8 +4,8 @@ module V1
         
         # GET /users/user_id/buckets
         def index
-            # get current user todos
-            @buckets = current_user.buckets
+            # get paginated current user todos
+            @buckets = current_user.buckets.paginate(page: params[:page], per_page: 20)
             json_response(@buckets)
         end
 
